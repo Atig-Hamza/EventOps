@@ -181,11 +181,9 @@ export default function AdminPage() {
                 <Card key={res.id} variant="solid" className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 border border-slate-200">
                   <div className="flex-1">
                     <div className="font-medium text-slate-900">
-                      {/* @ts-expect-error - user is populated server-side */}
                       {res.user?.email}
                     </div>
                     <div className="text-sm text-slate-500">
-                      {/* @ts-expect-error - event is populated server-side */}
                       Requested for: <span className="font-medium text-slate-700">{res.event?.title}</span>
                     </div>
                     <div className="text-xs text-slate-400 mt-1">
