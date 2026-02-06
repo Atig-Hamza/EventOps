@@ -6,7 +6,6 @@ import { api, Event, Reservation } from "@/lib/api";
 import { Button } from "@/app/components/Button";
 import { Card } from "@/app/components/Card";
 import { Calendar, MapPin, Ticket, Clock, CheckCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
   const { user, logout } = useAuth();
@@ -107,7 +106,7 @@ export default function DashboardPage() {
                   <div className="absolute top-0 right-0 w-24 h-24 bg-violet-100 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110" />
                   <div className="relative">
                     <div className="mb-4">
-                      {/* @ts-expect-error - event is populated */}
+                      {/* @ts-expect-error - event is populated server-side */}
                       <h3 className="text-lg font-bold">{res.event?.title}</h3>
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mt-2 ${
                         res.status === 'CONFIRMED' ? 'bg-green-100 text-green-800' :
@@ -118,16 +117,16 @@ export default function DashboardPage() {
                         {res.status}
                       </span>
                     </div>
-                    {/* @ts-expect-error */}
+                    {/* @ts-expect-error - event is populated server-side */}
                      <div className="space-y-2 text-sm text-slate-600 mb-6">
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
-                        {/* @ts-expect-error */}
+                        {/* @ts-expect-error - event dateTime is populated server-side */}
                         {new Date(res.event?.dateTime).toLocaleDateString()} at {new Date(res.event?.dateTime).toLocaleTimeString()}
                       </div>
                       <div className="flex items-center gap-2">
                         <MapPin className="w-4 h-4" />
-                         {/* @ts-expect-error */}
+                         {/* @ts-expect-error - event location is populated server-side */}
                         {res.event?.location}
                       </div>
                     </div>

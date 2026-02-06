@@ -41,6 +41,7 @@ export class ReservationsService {
         });
     }
 
+    // eslint-disable-next-line @typescript-eslint/require-await
     async findAllByUser(userId: string) {
         return this.store
             .listReservationsByUser(userId)
@@ -51,6 +52,7 @@ export class ReservationsService {
             .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
     }
 
+    // eslint-disable-next-line @typescript-eslint/require-await
     async findAllByEvent(eventId: string) {
         return this.store
             .listReservationsByEvent(eventId)
@@ -61,6 +63,7 @@ export class ReservationsService {
             .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
     }
 
+    // eslint-disable-next-line @typescript-eslint/require-await
     async findAllAdmin() {
         return this.store
             .listReservations()
@@ -72,6 +75,7 @@ export class ReservationsService {
             .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
     }
 
+    // eslint-disable-next-line @typescript-eslint/require-await
     async updateStatus(id: string, status: ReservationStatus, userId?: string) {
         const reservation = this.store.findReservationById(id);
 

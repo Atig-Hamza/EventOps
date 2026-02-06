@@ -25,12 +25,8 @@ function getInitialUser(): User | null {
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(getInitialUser);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-
-  useEffect(() => {
-    setIsLoading(false);
-  }, []);
 
   const login = (token: string, userData: User) => {
     setToken(token);

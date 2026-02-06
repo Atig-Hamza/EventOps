@@ -35,6 +35,7 @@ describe('AppController (e2e)', () => {
       })
       .expect(201);
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     adminToken = response.body.token;
   });
 
@@ -49,6 +50,7 @@ describe('AppController (e2e)', () => {
       })
       .expect(201);
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     userToken = response.body.token;
   });
 
@@ -66,6 +68,7 @@ describe('AppController (e2e)', () => {
       })
       .expect(201);
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     createdEventId = response.body.id;
   });
 
@@ -86,6 +89,7 @@ describe('AppController (e2e)', () => {
       .send({ eventId: createdEventId })
       .expect(201);
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     createdReservationId = response.body.id;
   });
 
@@ -105,7 +109,9 @@ describe('AppController (e2e)', () => {
       .set('Authorization', `Bearer ${userToken}`)
       .expect(200);
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     const reservation = response.body.find((r: { id: string; status: string }) => r.id === createdReservationId);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     expect(reservation.status).toBe('CONFIRMED');
   });
 });
