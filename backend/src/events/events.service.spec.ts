@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EventsService } from './events.service';
 import { MemoryStoreService } from '../common/memory-store.service';
-import { EventStatus, ReservationStatus } from '../common/enums';
+import { EventStatus } from '../common/enums';
 import { NotFoundException } from '@nestjs/common';
 
 describe('EventsService', () => {

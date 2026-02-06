@@ -3,7 +3,6 @@ import { MemoryStoreService } from '../common/memory-store.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { EventsService } from '../events/events.service';
 import { EventStatus, ReservationStatus } from '../common/enums';
-import { Reservation } from '../common/models';
 
 @Injectable()
 export class ReservationsService {

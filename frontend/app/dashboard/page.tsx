@@ -13,7 +13,6 @@ export default function DashboardPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
 
   useEffect(() => {
     if (!user) return; // Wait for auth
@@ -43,8 +42,9 @@ export default function DashboardPage() {
       const res = await api.get("/reservations/my");
       setReservations(res.data);
       alert("Reservation created successfully!");
-    } catch (err: any) {
-      alert(err.response?.data?.message || "Failed to reserve");
+    } catch (err) {
+      const error = err as { response?: { data?: { message: string } } };
+      alert(error.response?.data?.message || "Failed to reserve");
     }
   };
 
@@ -54,8 +54,9 @@ export default function DashboardPage() {
       // Refresh reservations
       const res = await api.get("/reservations/my");
       setReservations(res.data);
-    } catch (err: any) {
-      alert(err.response?.data?.message || "Failed to cancel");
+    } catch (err) {
+      const error = err as { response?: { data?: { message: string } } };
+      alert(error.response?.data?.message || "Failed to cancel");
     }
   };
 
@@ -106,7 +107,7 @@ export default function DashboardPage() {
                   <div className="absolute top-0 right-0 w-24 h-24 bg-violet-100 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110" />
                   <div className="relative">
                     <div className="mb-4">
-                      {/* @ts-ignore - event is populated */}
+                      {/* @ts-expect-error - event is populated */}
                       <h3 className="text-lg font-bold">{res.event?.title}</h3>
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mt-2 ${
                         res.status === 'CONFIRMED' ? 'bg-green-100 text-green-800' :
@@ -117,16 +118,16 @@ export default function DashboardPage() {
                         {res.status}
                       </span>
                     </div>
-                    {/* @ts-ignore */}
+                    {/* @ts-expect-error */}
                      <div className="space-y-2 text-sm text-slate-600 mb-6">
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
-                        {/* @ts-ignore */}
+                        {/* @ts-expect-error */}
                         {new Date(res.event?.dateTime).toLocaleDateString()} at {new Date(res.event?.dateTime).toLocaleTimeString()}
                       </div>
                       <div className="flex items-center gap-2">
                         <MapPin className="w-4 h-4" />
-                         {/* @ts-ignore */}
+                         {/* @ts-expect-error */}
                         {res.event?.location}
                       </div>
                     </div>

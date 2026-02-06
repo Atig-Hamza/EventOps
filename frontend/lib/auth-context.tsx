@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { api, AuthResponse, clearToken, getToken, setToken, User } from './api';
+import { api, clearToken, getToken, setToken, User } from './api';
 import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
@@ -13,21 +13,22 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+function getInitialUser(): User | null {
+  if (typeof window === 'undefined') return null;
+  const token = getToken();
+  const storedUser = localStorage.getItem('user');
+  if (token && storedUser) {
+    return JSON.parse(storedUser) as User;
+  }
+  return null;
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(getInitialUser);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    // Basic restoration of user from token (decode or just assume logged in if token exists)
-    // For simplicity, we might just check if token exists, 
-    // but ideally we should save user info in localStorage too or fetch /me
-    const token = getToken();
-    const storedUser = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
-
-    if (token && storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
     setIsLoading(false);
   }, []);
 

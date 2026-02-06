@@ -6,7 +6,7 @@ import { api, Event, Reservation } from "@/lib/api";
 import { Button } from "@/app/components/Button";
 import { Input } from "@/app/components/Input";
 import { Card } from "@/app/components/Card";
-import { Calendar, Check, X, Plus, Filter, LayoutDashboard, Users } from "lucide-react";
+import { Check, X, Plus, LayoutDashboard, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function AdminPage() {
@@ -53,17 +53,18 @@ export default function AdminPage() {
       setLoading(false);
     };
     load();
-  }, [user]);
+  }, [user, router]);
 
-  const handleCreateEvent = async (e: React.FormEvent) => {
+  const handleCreateEvent = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await api.post("/events", newEvent);
       setShowCreateModal(false);
       setNewEvent({ title: '', description: '', dateTime: '', location: '', capacity: 0 });
       fetchEvents();
-    } catch (err: any) {
-      alert(err.response?.data?.message || "Failed to create event");
+    } catch (err) {
+      const error = err as { response?: { data?: { message: string } } };
+      alert(error.response?.data?.message || "Failed to create event");
     }
   };
 
@@ -71,7 +72,10 @@ export default function AdminPage() {
     try {
       await api.patch(`/events/${id}`, { status: 'PUBLISHED' });
       fetchEvents();
-    } catch (err) { alert("Failed to publish"); }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to publish");
+    }
   };
 
   const handleReservationStatus = async (id: string, status: 'CONFIRMED' | 'REFUSED') => {
@@ -79,7 +83,10 @@ export default function AdminPage() {
       await api.patch(`/reservations/${id}/status`, { status });
       fetchReservations();
       fetchEvents(); // Update counts
-    } catch (err) { alert("Failed to update status"); }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update status");
+    }
   };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
@@ -174,11 +181,11 @@ export default function AdminPage() {
                 <Card key={res.id} variant="solid" className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 border border-slate-200">
                   <div className="flex-1">
                     <div className="font-medium text-slate-900">
-                      {/* @ts-ignore */}
+                      {/* @ts-expect-error */}
                       {res.user?.email}
                     </div>
                     <div className="text-sm text-slate-500">
-                      {/* @ts-ignore */}
+                      {/* @ts-expect-error */}
                       Requested for: <span className="font-medium text-slate-700">{res.event?.title}</span>
                     </div>
                     <div className="text-xs text-slate-400 mt-1">

@@ -19,7 +19,7 @@ export class EventsController {
     }
 
     @Get()
-    async findAll(@Request() req: any) {
+    findAll() {
         // Public endpoint for published events
         // If we want admin to see all, we might need to parse token manually or have separate endpoints.
         // Let's keep /events public for PUBLISHED only.

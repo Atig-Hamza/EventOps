@@ -16,7 +16,7 @@ export default function SignupPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
     setLoading(true);
@@ -28,8 +28,9 @@ export default function SignupPage() {
         email: res.data.email,
         role: res.data.role,
       });
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Something went wrong");
+    } catch (err) {
+      const error = err as { response?: { data?: { message: string } } };
+      setError(error.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }

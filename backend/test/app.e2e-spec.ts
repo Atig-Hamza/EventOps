@@ -105,7 +105,7 @@ describe('AppController (e2e)', () => {
       .set('Authorization', `Bearer ${userToken}`)
       .expect(200);
 
-    const reservation = response.body.find((r: any) => r.id === createdReservationId);
+    const reservation = response.body.find((r: { id: string; status: string }) => r.id === createdReservationId);
     expect(reservation.status).toBe('CONFIRMED');
   });
 });
