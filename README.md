@@ -48,6 +48,46 @@ A modern, full-stack event management platform built with NestJS backend and Nex
 - **Icons**: Lucide React
 
 ### DevOps
+- **Docker**: Containerization
+- **Docker Compose**: Orchestration
+
+## 🐳 Running with Docker
+
+You can easily build and run the entire application (Frontend, Backend, and Database) using Docker Compose.
+
+### Prerequisites
+- Docker and Docker Compose installed on your machine.
+
+### Instructions
+
+1.  Clone the repository:
+    ```bash
+    git clone https://github.com/yourusername/eventops.git
+    cd eventops
+    ```
+
+2.  Build and run the containers:
+    ```bash
+    docker-compose up --build
+    ```
+
+    This command will:
+    - Build the Backend (NestJS) image.
+    - Build the Frontend (Next.js) image.
+    - Start MongoDB.
+    - Start Backend on port 3000.
+    - Start Frontend on port 3001.
+
+3.  Access the application:
+    - Frontend: [http://localhost:3001](http://localhost:3001)
+    - Backend API: [http://localhost:3000](http://localhost:3000)
+
+### Stopping the containers
+
+To stop the containers, run:
+```bash
+docker-compose down
+```
 - **Containerization**: Docker & Docker Compose
 - **Linting**: ESLint
 - **Code Formatting**: Prettier
