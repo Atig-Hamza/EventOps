@@ -1,10 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ReservationsService } from './reservations.service';
-import { UtilsService } from '../utils/utils.service'; // This looks wrong, checking imports
 import { MemoryStoreService } from '../common/memory-store.service';
 import { EventsService } from '../events/events.service';
 import { EventStatus, ReservationStatus } from '../common/enums';
-import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException } from '@nestjs/common';
 
 describe('ReservationsService', () => {
   let service: ReservationsService;

@@ -14,13 +14,13 @@ export class ReservationsController {
 
     @Post()
     @Roles(Role.Participant)
-    create(@Request() req: any, @Body() createReservationDto: CreateReservationDto) {
+    create(@Request() req: { user: { userId: string } }, @Body() createReservationDto: CreateReservationDto) {
         return this.reservationsService.create(req.user.userId, createReservationDto);
     }
 
     @Get('my')
     @Roles(Role.Participant)
-    findAllMyReservations(@Request() req: any) {
+    findAllMyReservations(@Request() req: { user: { userId: string } }) {
         return this.reservationsService.findAllByUser(req.user.userId);
     }
 
@@ -41,7 +41,7 @@ export class ReservationsController {
 
     @Patch(':id/cancel')
     @Roles(Role.Participant)
-    cancel(@Request() req: any, @Param('id') id: string) {
+    cancel(@Request() req: { user: { userId: string } }, @Param('id') id: string) {
         return this.reservationsService.updateStatus(id, ReservationStatus.Canceled, req.user.userId);
     }
 }

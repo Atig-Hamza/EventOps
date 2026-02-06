@@ -3,7 +3,6 @@ import { MemoryStoreService } from '../common/memory-store.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { EventsService } from '../events/events.service';
 import { EventStatus, ReservationStatus } from '../common/enums';
-import { Reservation } from '../common/models';
 
 @Injectable()
 export class ReservationsService {
@@ -42,6 +41,7 @@ export class ReservationsService {
         });
     }
 
+    // eslint-disable-next-line @typescript-eslint/require-await
     async findAllByUser(userId: string) {
         return this.store
             .listReservationsByUser(userId)
@@ -52,6 +52,7 @@ export class ReservationsService {
             .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
     }
 
+    // eslint-disable-next-line @typescript-eslint/require-await
     async findAllByEvent(eventId: string) {
         return this.store
             .listReservationsByEvent(eventId)
@@ -62,6 +63,7 @@ export class ReservationsService {
             .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
     }
 
+    // eslint-disable-next-line @typescript-eslint/require-await
     async findAllAdmin() {
         return this.store
             .listReservations()
@@ -73,6 +75,7 @@ export class ReservationsService {
             .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
     }
 
+    // eslint-disable-next-line @typescript-eslint/require-await
     async updateStatus(id: string, status: ReservationStatus, userId?: string) {
         const reservation = this.store.findReservationById(id);
 

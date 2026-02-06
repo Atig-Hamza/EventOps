@@ -15,7 +15,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
     setLoading(true);
@@ -27,8 +27,9 @@ export default function LoginPage() {
         email: res.data.email,
         role: res.data.role,
       });
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Something went wrong");
+    } catch (err) {
+      const error = err as { response?: { data?: { message: string } } };
+      setError(error.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -76,7 +77,7 @@ export default function LoginPage() {
           </form>
 
           <p className="mt-6 text-center text-sm text-slate-600">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link href="/signup" className="text-violet-600 font-medium hover:text-violet-700">
               Sign up
             </Link>

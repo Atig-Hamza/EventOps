@@ -54,7 +54,7 @@ export class AuthService {
     }
 
     private generateToken(user: { id: string; email: string; role: Role | string }) {
-        const role = user.role === Role.Admin ? Role.Admin : Role.Participant;
+        const role = typeof user.role === 'string' ? (user.role as Role) : user.role;
         const payload = { email: user.email, sub: user.id, role };
         return this.jwtService.sign(payload);
     }
