@@ -8,8 +8,14 @@ import { EventsModule } from './events/events.module';
 import { ReservationsModule } from './reservations/reservations.module';
 
 @Module({
-  imports: [CommonModule, UsersModule, AuthModule, EventsModule, ReservationsModule],
+  imports: [
+    CommonModule,
+    UsersModule,
+    AuthModule,
+    EventsModule,
+    ReservationsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

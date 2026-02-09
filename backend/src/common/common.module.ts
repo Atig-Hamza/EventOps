@@ -3,7 +3,7 @@ import { MemoryStoreService } from './memory-store.service';
 
 @Global()
 @Module({
-    providers: [MemoryStoreService],
-    exports: [MemoryStoreService],
+  providers: [MemoryStoreService],
+  exports: [MemoryStoreService],
 })
 export class CommonModule {}

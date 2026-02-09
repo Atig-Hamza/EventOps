@@ -32,7 +32,12 @@ describe('UsersService', () => {
 
   describe('findOne', () => {
     it('should return a user if found', async () => {
-      const user = { id: '1', email: 'test@test.com', password: 'pw', role: Role.Participant };
+      const user = {
+        id: '1',
+        email: 'test@test.com',
+        password: 'pw',
+        role: Role.Participant,
+      };
       jest.spyOn(store, 'findUserByEmail').mockReturnValue(user);
 
       const result = await service.findOne('test@test.com');
@@ -49,22 +54,31 @@ describe('UsersService', () => {
 
   describe('findById', () => {
     it('should return a user if found', async () => {
-        const user = { id: '1', email: 'test@test.com', password: 'pw', role: Role.Participant };
-        jest.spyOn(store, 'findUserById').mockReturnValue(user);
-  
-        const result = await service.findById('1');
-        expect(result).toEqual(user);
-      });
+      const user = {
+        id: '1',
+        email: 'test@test.com',
+        password: 'pw',
+        role: Role.Participant,
+      };
+      jest.spyOn(store, 'findUserById').mockReturnValue(user);
+
+      const result = await service.findById('1');
+      expect(result).toEqual(user);
+    });
   });
 
   describe('createUser', () => {
-      it('should create a user', async () => {
-        const dto = { email: 'new@test.com', password: 'pw', role: Role.Participant };
-        const createdUser = { id: 'new', ...dto };
-        jest.spyOn(store, 'createUser').mockReturnValue(createdUser);
+    it('should create a user', async () => {
+      const dto = {
+        email: 'new@test.com',
+        password: 'pw',
+        role: Role.Participant,
+      };
+      const createdUser = { id: 'new', ...dto };
+      jest.spyOn(store, 'createUser').mockReturnValue(createdUser);
 
-        const result = await service.createUser(dto);
-        expect(result).toEqual(createdUser);
-      });
+      const result = await service.createUser(dto);
+      expect(result).toEqual(createdUser);
+    });
   });
 });

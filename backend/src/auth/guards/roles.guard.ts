@@ -5,20 +5,20 @@ import { Role } from '../../common/enums';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-    constructor(private reflector: Reflector) { }
+  constructor(private reflector: Reflector) {}
 
-    canActivate(context: ExecutionContext): boolean {
-        const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
-            context.getHandler(),
-            context.getClass(),
-        ]);
-        if (!requiredRoles) {
-            return true;
-        }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const request = context.switchToHttp().getRequest();
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        const user = request.user as { role: Role };
-        return requiredRoles.includes(user.role);
+  canActivate(context: ExecutionContext): boolean {
+    const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+    if (!requiredRoles) {
+      return true;
     }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const request = context.switchToHttp().getRequest();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const user = request.user as { role: Role };
+    return requiredRoles.includes(user.role);
+  }
 }

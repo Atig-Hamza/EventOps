@@ -5,9 +5,9 @@ import { EventsModule } from '../events/events.module';
 import { TicketService } from './ticket.service';
 
 @Module({
-    imports: [EventsModule],
-    controllers: [ReservationsController],
-    providers: [ReservationsService, TicketService],
-    exports: [ReservationsService],
+  imports: [EventsModule],
+  controllers: [ReservationsController],
+  providers: [ReservationsService, TicketService],
+  exports: [ReservationsService],
 })
-export class ReservationsModule { }
+export class ReservationsModule {}

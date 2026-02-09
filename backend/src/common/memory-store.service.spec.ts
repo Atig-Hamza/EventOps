@@ -19,9 +19,13 @@ describe('MemoryStoreService', () => {
 
   describe('Users', () => {
     it('should create and find a user', () => {
-      const userData = { email: 'test@test.com', password: 'password', role: Role.Participant };
+      const userData = {
+        email: 'test@test.com',
+        password: 'password',
+        role: Role.Participant,
+      };
       const user = service.createUser(userData);
-      
+
       expect(user).toBeDefined();
       expect(user.id).toBeDefined();
       expect(user.email).toBe(userData.email);
@@ -45,7 +49,7 @@ describe('MemoryStoreService', () => {
         description: 'Description',
         dateTime: new Date(),
         location: 'Location',
-        capacity: 100
+        capacity: 100,
       };
 
       // Create
@@ -63,7 +67,9 @@ describe('MemoryStoreService', () => {
       expect(events).toContainEqual(event);
 
       // Update
-      const updatedEvent = service.updateEvent(event.id, { title: 'Updated Title' });
+      const updatedEvent = service.updateEvent(event.id, {
+        title: 'Updated Title',
+      });
       expect(updatedEvent.title).toBe('Updated Title');
       expect(service.findEventById(event.id).title).toBe('Updated Title');
 
@@ -73,32 +79,50 @@ describe('MemoryStoreService', () => {
     });
 
     it('should cascade delete reservations when event is deleted', () => {
-       const user = service.createUser({ email: 'u@u.com', password: 'p', role: Role.Participant });
-       const event = service.createEvent({
+      const user = service.createUser({
+        email: 'u@u.com',
+        password: 'p',
+        role: Role.Participant,
+      });
+      const event = service.createEvent({
         title: 'Event',
         description: 'Desc',
         dateTime: new Date(),
         location: 'Loc',
-        capacity: 10
-       });
-       const reservation = service.createReservation({ userId: user.id, eventId: event.id });
+        capacity: 10,
+      });
+      const reservation = service.createReservation({
+        userId: user.id,
+        eventId: event.id,
+      });
 
-       expect(service.findReservationById(reservation.id)).toBeDefined();
-       
-       service.deleteEvent(event.id);
-       
-       expect(service.findReservationById(reservation.id)).toBeUndefined();
+      expect(service.findReservationById(reservation.id)).toBeDefined();
+
+      service.deleteEvent(event.id);
+
+      expect(service.findReservationById(reservation.id)).toBeUndefined();
     });
   });
 
   describe('Reservations', () => {
     it('should create and find reservation', () => {
-      const user = service.createUser({ email: 'r@r.com', password: 'p', role: Role.Participant });
+      const user = service.createUser({
+        email: 'r@r.com',
+        password: 'p',
+        role: Role.Participant,
+      });
       const event = service.createEvent({
-        title: 'Event', description: 'D', dateTime: new Date(), location: 'L', capacity: 10
+        title: 'Event',
+        description: 'D',
+        dateTime: new Date(),
+        location: 'L',
+        capacity: 10,
       });
 
-      const reservation = service.createReservation({ userId: user.id, eventId: event.id });
+      const reservation = service.createReservation({
+        userId: user.id,
+        eventId: event.id,
+      });
       expect(reservation).toBeDefined();
       expect(reservation.status).toBe(ReservationStatus.Pending);
 
@@ -107,14 +131,27 @@ describe('MemoryStoreService', () => {
     });
 
     it('should update reservation status', () => {
-        const user = service.createUser({ email: 'r2@r.com', password: 'p', role: Role.Participant });
-        const event = service.createEvent({
-          title: 'Event', description: 'D', dateTime: new Date(), location: 'L', capacity: 10
-        });
-        const reservation = service.createReservation({ userId: user.id, eventId: event.id });
+      const user = service.createUser({
+        email: 'r2@r.com',
+        password: 'p',
+        role: Role.Participant,
+      });
+      const event = service.createEvent({
+        title: 'Event',
+        description: 'D',
+        dateTime: new Date(),
+        location: 'L',
+        capacity: 10,
+      });
+      const reservation = service.createReservation({
+        userId: user.id,
+        eventId: event.id,
+      });
 
-        const updated = service.updateReservation(reservation.id, { status: ReservationStatus.Confirmed });
-        expect(updated.status).toBe(ReservationStatus.Confirmed);
+      const updated = service.updateReservation(reservation.id, {
+        status: ReservationStatus.Confirmed,
+      });
+      expect(updated.status).toBe(ReservationStatus.Confirmed);
     });
   });
 });

@@ -110,7 +110,9 @@ describe('AppController (e2e)', () => {
       .expect(200);
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    const reservation = response.body.find((r: { id: string; status: string }) => r.id === createdReservationId);
+    const reservation = response.body.find(
+      (r: { id: string; status: string }) => r.id === createdReservationId,
+    );
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     expect(reservation.status).toBe('CONFIRMED');
   });

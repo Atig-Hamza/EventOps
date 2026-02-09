@@ -53,58 +53,84 @@ describe('ReservationsService', () => {
       jest.spyOn(eventsService, 'findOne').mockResolvedValue(event as any);
       jest.spyOn(store, 'findActiveReservation').mockReturnValue(undefined);
       jest.spyOn(store, 'countReservationsByEvent').mockReturnValue(0);
-      jest.spyOn(store, 'createReservation').mockReturnValue({ id: 'res1' } as any);
+      jest
+        .spyOn(store, 'createReservation')
+        .mockReturnValue({ id: 'res1' } as any);
 
       const result = await service.create('user1', { eventId: '1' });
       expect(result).toEqual({ id: 'res1' });
     });
 
     it('should throw if event not published', async () => {
-        jest.spyOn(eventsService, 'findOne').mockResolvedValue({ status: EventStatus.Draft } as any);
-        await expect(service.create('u', { eventId: '1' })).rejects.toThrow(BadRequestException);
+      jest
+        .spyOn(eventsService, 'findOne')
+        .mockResolvedValue({ status: EventStatus.Draft } as any);
+      await expect(service.create('u', { eventId: '1' })).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should throw if already reserved', async () => {
-        jest.spyOn(eventsService, 'findOne').mockResolvedValue({ status: EventStatus.Published } as any);
-        jest.spyOn(store, 'findActiveReservation').mockReturnValue({} as any);
-        await expect(service.create('u', { eventId: '1' })).rejects.toThrow(ConflictException);
+      jest
+        .spyOn(eventsService, 'findOne')
+        .mockResolvedValue({ status: EventStatus.Published } as any);
+      jest.spyOn(store, 'findActiveReservation').mockReturnValue({} as any);
+      await expect(service.create('u', { eventId: '1' })).rejects.toThrow(
+        ConflictException,
+      );
     });
 
     it('should throw if event is full', async () => {
-        const event = { id: '1', status: EventStatus.Published, capacity: 1 };
-        jest.spyOn(eventsService, 'findOne').mockResolvedValue(event as any);
-        jest.spyOn(store, 'findActiveReservation').mockReturnValue(undefined);
-        jest.spyOn(store, 'countReservationsByEvent').mockReturnValue(1);
-        
-        await expect(service.create('u', { eventId: '1' })).rejects.toThrow(BadRequestException);
+      const event = { id: '1', status: EventStatus.Published, capacity: 1 };
+      jest.spyOn(eventsService, 'findOne').mockResolvedValue(event as any);
+      jest.spyOn(store, 'findActiveReservation').mockReturnValue(undefined);
+      jest.spyOn(store, 'countReservationsByEvent').mockReturnValue(1);
+
+      await expect(service.create('u', { eventId: '1' })).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 
   describe('updateStatus', () => {
     it('should update status', async () => {
-        const res = { id: '1', userId: 'u1' };
-        jest.spyOn(store, 'findReservationById').mockReturnValue(res as any);
-        jest.spyOn(store, 'updateReservation').mockReturnValue({ ...res, status: ReservationStatus.Confirmed } as any);
+      const res = { id: '1', userId: 'u1' };
+      jest.spyOn(store, 'findReservationById').mockReturnValue(res as any);
+      jest.spyOn(store, 'updateReservation').mockReturnValue({
+        ...res,
+        status: ReservationStatus.Confirmed,
+      } as any);
 
-        const result = await service.updateStatus('1', ReservationStatus.Confirmed);
-        expect(result.status).toBe(ReservationStatus.Confirmed);
+      const result = await service.updateStatus(
+        '1',
+        ReservationStatus.Confirmed,
+      );
+      expect(result.status).toBe(ReservationStatus.Confirmed);
     });
 
     it('should throw if participant tries to confirm', async () => {
-        const res = { id: '1', userId: 'u1' };
-        jest.spyOn(store, 'findReservationById').mockReturnValue(res as any);
-        
-        // Passing user ID implies participant action
-        await expect(service.updateStatus('1', ReservationStatus.Confirmed, 'u1')).rejects.toThrow(BadRequestException);
-    });
-    
-    it('should allow participant to cancel', async () => {
-        const res = { id: '1', userId: 'u1' };
-        jest.spyOn(store, 'findReservationById').mockReturnValue(res as any);
-        jest.spyOn(store, 'updateReservation').mockReturnValue({ ...res, status: ReservationStatus.Canceled } as any);
+      const res = { id: '1', userId: 'u1' };
+      jest.spyOn(store, 'findReservationById').mockReturnValue(res as any);
 
-        const result = await service.updateStatus('1', ReservationStatus.Canceled, 'u1');
-        expect(result.status).toBe(ReservationStatus.Canceled);
+      // Passing user ID implies participant action
+      await expect(
+        service.updateStatus('1', ReservationStatus.Confirmed, 'u1'),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should allow participant to cancel', async () => {
+      const res = { id: '1', userId: 'u1' };
+      jest.spyOn(store, 'findReservationById').mockReturnValue(res as any);
+      jest
+        .spyOn(store, 'updateReservation')
+        .mockReturnValue({ ...res, status: ReservationStatus.Canceled } as any);
+
+      const result = await service.updateStatus(
+        '1',
+        ReservationStatus.Canceled,
+        'u1',
+      );
+      expect(result.status).toBe(ReservationStatus.Canceled);
     });
   });
 });
