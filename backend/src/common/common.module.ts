@@ -1,9 +1,9 @@
 import { Global, Module } from '@nestjs/common';
-import { MemoryStoreService } from './memory-store.service';
+import { MongoStoreService } from './mongo-store.service';
 
 @Global()
 @Module({
-    providers: [MemoryStoreService],
-    exports: [MemoryStoreService],
+  providers: [MongoStoreService],
+  exports: [MongoStoreService],
 })
 export class CommonModule {}

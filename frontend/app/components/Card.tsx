@@ -3,14 +3,15 @@ import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: 'glass' | 'solid';
+  variant?: 'glass' | 'solid' | 'outlined';
 }
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, variant = 'glass', children, ...props }, ref) => {
     const variants = {
       glass: 'glass-card',
-      solid: 'bg-white border border-slate-100 shadow-sm rounded-2xl',
+      solid: 'bg-white border border-[--border] shadow-[--shadow-xs] rounded-[--radius-lg]',
+      outlined: 'bg-white/50 border border-[--border] rounded-[--radius-lg]',
     };
 
     return (
