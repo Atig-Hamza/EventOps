@@ -17,7 +17,7 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // Create Event Form
+
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newEvent, setNewEvent] = useState({
     title: '',
@@ -82,7 +82,7 @@ export default function AdminPage() {
     try {
       await api.patch(`/reservations/${id}/status`, { status });
       fetchReservations();
-      fetchEvents(); // Update counts
+      fetchEvents();
     } catch (err) {
       console.error(err);
       alert("Failed to update status");
@@ -105,7 +105,7 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-[--background] pb-16">
-      {/* Navbar */}
+
       <nav className="sticky top-0 z-50 bg-[--surface-frosted] backdrop-blur-xl border-b border-[--border]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -127,7 +127,7 @@ export default function AdminPage() {
       </nav>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
-        {/* Stats row */}
+
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
           <div className="rounded-xl border border-[--border] bg-white p-5">
             <div className="text-[13px] font-medium text-neutral-400 mb-1">Total events</div>
@@ -147,26 +147,24 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* Tabs */}
+
         <div className="flex gap-1 p-1 bg-neutral-100 rounded-xl w-fit mb-8">
           <button
             onClick={() => setActiveTab('events')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-[14px] font-medium transition-all duration-200 cursor-pointer ${
-              activeTab === 'events' 
-                ? 'bg-white text-neutral-900 shadow-sm' 
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-[14px] font-medium transition-all duration-200 cursor-pointer ${activeTab === 'events'
+                ? 'bg-white text-neutral-900 shadow-sm'
                 : 'text-neutral-500 hover:text-neutral-700'
-            }`}
+              }`}
           >
             <LayoutDashboard className="w-4 h-4" />
             Events
           </button>
           <button
             onClick={() => setActiveTab('reservations')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-[14px] font-medium transition-all duration-200 cursor-pointer ${
-              activeTab === 'reservations' 
-                ? 'bg-white text-neutral-900 shadow-sm' 
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-[14px] font-medium transition-all duration-200 cursor-pointer ${activeTab === 'reservations'
+                ? 'bg-white text-neutral-900 shadow-sm'
                 : 'text-neutral-500 hover:text-neutral-700'
-            }`}
+              }`}
           >
             <Users className="w-4 h-4" />
             Reservations
@@ -187,9 +185,9 @@ export default function AdminPage() {
               </Button>
             </div>
 
-            {/* Events table-like list */}
+
             <div className="rounded-xl border border-[--border] bg-white overflow-hidden">
-              {/* Header */}
+
               <div className="hidden sm:grid grid-cols-[1fr_120px_140px_140px_120px] gap-4 px-5 py-3 border-b border-[--border] bg-neutral-50/50 text-[12px] font-semibold text-neutral-400 uppercase tracking-wider">
                 <span>Event</span>
                 <span>Status</span>
@@ -209,8 +207,8 @@ export default function AdminPage() {
               ) : (
                 <div className="divide-y divide-[--border]">
                   {events.map((event, i) => (
-                    <div 
-                      key={event.id} 
+                    <div
+                      key={event.id}
                       className="animate-fade-in grid grid-cols-1 sm:grid-cols-[1fr_120px_140px_140px_120px] gap-3 sm:gap-4 px-5 py-4 items-center hover:bg-neutral-50/50 transition-colors duration-150"
                       style={{ animationDelay: `${i * 30}ms` }}
                     >
@@ -222,16 +220,14 @@ export default function AdminPage() {
                         </p>
                       </div>
                       <div>
-                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider ${
-                          event.status === 'PUBLISHED' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' :
-                          event.status === 'DRAFT' ? 'bg-amber-50 text-amber-700 border border-amber-100' :
-                          'bg-red-50 text-red-600 border border-red-100'
-                        }`}>
-                          <div className={`w-1.5 h-1.5 rounded-full ${
-                            event.status === 'PUBLISHED' ? 'bg-emerald-500' :
-                            event.status === 'DRAFT' ? 'bg-amber-500' :
-                            'bg-red-500'
-                          }`} />
+                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider ${event.status === 'PUBLISHED' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' :
+                            event.status === 'DRAFT' ? 'bg-amber-50 text-amber-700 border border-amber-100' :
+                              'bg-red-50 text-red-600 border border-red-100'
+                          }`}>
+                          <div className={`w-1.5 h-1.5 rounded-full ${event.status === 'PUBLISHED' ? 'bg-emerald-500' :
+                              event.status === 'DRAFT' ? 'bg-amber-500' :
+                                'bg-red-500'
+                            }`} />
                           {event.status}
                         </span>
                       </div>
@@ -261,9 +257,9 @@ export default function AdminPage() {
         {activeTab === 'reservations' && (
           <div className="animate-fade-in space-y-6">
             <h2 className="text-xl font-bold tracking-tight text-neutral-900">Reservation requests</h2>
-            
+
             <div className="rounded-xl border border-[--border] bg-white overflow-hidden">
-              {/* Header */}
+
               <div className="hidden sm:grid grid-cols-[1fr_1fr_140px_100px_100px] gap-4 px-5 py-3 border-b border-[--border] bg-neutral-50/50 text-[12px] font-semibold text-neutral-400 uppercase tracking-wider">
                 <span>Guest</span>
                 <span>Event</span>
@@ -283,8 +279,8 @@ export default function AdminPage() {
               ) : (
                 <div className="divide-y divide-[--border]">
                   {reservations.map((res, i) => (
-                    <div 
-                      key={res.id} 
+                    <div
+                      key={res.id}
                       className="animate-fade-in grid grid-cols-1 sm:grid-cols-[1fr_1fr_140px_100px_100px] gap-3 sm:gap-4 px-5 py-4 items-center hover:bg-neutral-50/50 transition-colors duration-150"
                       style={{ animationDelay: `${i * 30}ms` }}
                     >
@@ -301,25 +297,24 @@ export default function AdminPage() {
                         {new Date(res.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                       </div>
                       <div>
-                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider ${
-                          res.status === 'CONFIRMED' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' :
-                          res.status === 'PENDING' ? 'bg-amber-50 text-amber-700 border border-amber-100' :
-                          res.status === 'REFUSED' ? 'bg-red-50 text-red-600 border border-red-100' :
-                          'bg-neutral-50 text-neutral-600 border border-neutral-100'
-                        }`}>
+                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider ${res.status === 'CONFIRMED' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' :
+                            res.status === 'PENDING' ? 'bg-amber-50 text-amber-700 border border-amber-100' :
+                              res.status === 'REFUSED' ? 'bg-red-50 text-red-600 border border-red-100' :
+                                'bg-neutral-50 text-neutral-600 border border-neutral-100'
+                          }`}>
                           {res.status}
                         </span>
                       </div>
                       <div>
                         {res.status === 'PENDING' && (
                           <div className="flex gap-1.5">
-                            <button 
+                            <button
                               onClick={() => handleReservationStatus(res.id, 'CONFIRMED')}
                               className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border border-emerald-100 flex items-center justify-center transition-all duration-150 hover:scale-105 active:scale-95 cursor-pointer"
                             >
                               <Check className="w-4 h-4" />
                             </button>
-                            <button 
+                            <button
                               onClick={() => handleReservationStatus(res.id, 'REFUSED')}
                               className="w-8 h-8 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 border border-red-100 flex items-center justify-center transition-all duration-150 hover:scale-105 active:scale-95 cursor-pointer"
                             >
@@ -337,37 +332,37 @@ export default function AdminPage() {
         )}
       </main>
 
-      {/* Create Event Modal */}
+
       {showCreateModal && (
         <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
-          {/* Backdrop */}
-          <div 
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-fade-in" 
-            onClick={() => setShowCreateModal(false)} 
+
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-fade-in"
+            onClick={() => setShowCreateModal(false)}
           />
-          
-          {/* Modal */}
+
+
           <div className="relative w-full max-w-lg animate-scale-in">
             <div className="bg-white rounded-2xl shadow-xl border border-[--border] overflow-hidden">
-              {/* Header */}
+
               <div className="px-6 py-5 border-b border-[--border]">
                 <h3 className="text-[18px] font-bold text-neutral-900 tracking-tight">Create new event</h3>
                 <p className="text-[14px] text-neutral-400 mt-0.5">Fill in the details for your event</p>
               </div>
 
-              {/* Body */}
+
               <form onSubmit={handleCreateEvent} className="p-6 space-y-5">
                 <Input
                   label="Event title"
                   value={newEvent.title}
-                  onChange={e => setNewEvent({...newEvent, title: e.target.value})}
+                  onChange={e => setNewEvent({ ...newEvent, title: e.target.value })}
                   placeholder="e.g. Annual Tech Conference"
                   required
                 />
                 <Input
                   label="Description"
                   value={newEvent.description}
-                  onChange={e => setNewEvent({...newEvent, description: e.target.value})}
+                  onChange={e => setNewEvent({ ...newEvent, description: e.target.value })}
                   placeholder="Describe your event..."
                   required
                 />
@@ -375,14 +370,14 @@ export default function AdminPage() {
                   label="Date & time"
                   type="datetime-local"
                   value={newEvent.dateTime}
-                  onChange={e => setNewEvent({...newEvent, dateTime: e.target.value})}
+                  onChange={e => setNewEvent({ ...newEvent, dateTime: e.target.value })}
                   required
                 />
                 <div className="grid grid-cols-2 gap-4">
                   <Input
                     label="Location"
                     value={newEvent.location}
-                    onChange={e => setNewEvent({...newEvent, location: e.target.value})}
+                    onChange={e => setNewEvent({ ...newEvent, location: e.target.value })}
                     placeholder="e.g. Main Hall"
                     required
                   />
@@ -390,13 +385,13 @@ export default function AdminPage() {
                     label="Capacity"
                     type="number"
                     value={newEvent.capacity}
-                    onChange={e => setNewEvent({...newEvent, capacity: Number(e.target.value)})}
+                    onChange={e => setNewEvent({ ...newEvent, capacity: Number(e.target.value) })}
                     required
                     min={1}
                   />
                 </div>
-                
-                {/* Footer */}
+
+
                 <div className="flex justify-end gap-2.5 pt-2">
                   <Button type="button" variant="ghost" onClick={() => setShowCreateModal(false)}>
                     Cancel

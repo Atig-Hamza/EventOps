@@ -14,7 +14,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) return; // Wait for auth
+    if (!user) return;
 
     const fetchData = async () => {
       try {
@@ -37,7 +37,7 @@ export default function DashboardPage() {
   const handleReserve = async (eventId: string) => {
     try {
       await api.post("/reservations", { eventId });
-      // Refresh reservations
+
       const res = await api.get("/reservations/my");
       setReservations(res.data);
       alert("Reservation created successfully!");
@@ -50,7 +50,7 @@ export default function DashboardPage() {
   const handleCancel = async (reservationId: string) => {
     try {
       await api.patch(`/reservations/${reservationId}/cancel`);
-      // Refresh reservations
+
       const res = await api.get("/reservations/my");
       setReservations(res.data);
     } catch (err) {
@@ -78,7 +78,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-[--background] pb-16">
-      {/* Navbar */}
+
       <nav className="sticky top-0 z-50 bg-[--surface-frosted] backdrop-blur-xl border-b border-[--border]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -107,7 +107,7 @@ export default function DashboardPage() {
       </nav>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
-        {/* Hero greeting */}
+
         <div className="mb-10">
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900 mb-2">
             Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 18 ? 'afternoon' : 'evening'}
@@ -117,7 +117,7 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        {/* Stats row */}
+
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
           <div className="rounded-xl border border-[--border] bg-white p-5">
             <div className="text-[13px] font-medium text-neutral-400 mb-1">Available events</div>
@@ -137,7 +137,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* My Reservations Section */}
+
         {activeReservations.length > 0 && (
           <section className="mb-14">
             <div className="flex items-center justify-between mb-6">
@@ -160,18 +160,17 @@ export default function DashboardPage() {
                     <h3 className="text-[16px] font-semibold text-neutral-900 leading-tight pr-3">
                       {res.event?.title}
                     </h3>
-                    <span className={`shrink-0 inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase ${
-                      res.status === 'CONFIRMED' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' :
-                      res.status === 'PENDING' ? 'bg-amber-50 text-amber-700 border border-amber-100' :
-                      res.status === 'CANCELED' ? 'bg-red-50 text-red-600 border border-red-100' :
-                      'bg-neutral-50 text-neutral-600 border border-neutral-100'
-                    }`}>
+                    <span className={`shrink-0 inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase ${res.status === 'CONFIRMED' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' :
+                        res.status === 'PENDING' ? 'bg-amber-50 text-amber-700 border border-amber-100' :
+                          res.status === 'CANCELED' ? 'bg-red-50 text-red-600 border border-red-100' :
+                            'bg-neutral-50 text-neutral-600 border border-neutral-100'
+                      }`}>
                       {res.status === 'CONFIRMED' && <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5" />}
                       {res.status === 'PENDING' && <div className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5" />}
                       {res.status}
                     </span>
                   </div>
-                  
+
                   <div className="space-y-2.5 text-[14px] text-neutral-500 mb-5">
                     <div className="flex items-center gap-2.5">
                       <Calendar className="w-3.5 h-3.5 text-neutral-400" />
@@ -184,12 +183,12 @@ export default function DashboardPage() {
                       <span>{res.event?.location}</span>
                     </div>
                   </div>
-                  
+
                   {res.status !== 'CANCELED' && (
-                    <Button 
-                      variant="danger" 
-                      size="sm" 
-                      className="w-full" 
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      className="w-full"
                       onClick={() => handleCancel(res.id)}
                     >
                       Cancel reservation
@@ -201,7 +200,7 @@ export default function DashboardPage() {
           </section>
         )}
 
-        {/* Available Events */}
+
         <section>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
@@ -212,7 +211,7 @@ export default function DashboardPage() {
             </div>
             <span className="text-[13px] text-neutral-400 font-medium">{events.length} available</span>
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {events.map((event, i) => (
               <div
@@ -220,7 +219,7 @@ export default function DashboardPage() {
                 className="animate-fade-in group rounded-xl border border-[--border] bg-white flex flex-col overflow-hidden hover:shadow-[--shadow-md] hover:border-[--border-strong] transition-all duration-300"
                 style={{ animationDelay: `${i * 50}ms` }}
               >
-                {/* Color bar */}
+
                 <div className="h-1 bg-linear-to-r from-neutral-900 via-neutral-700 to-neutral-400 opacity-80" />
 
                 <div className="p-5 flex flex-col flex-1">
@@ -232,14 +231,14 @@ export default function DashboardPage() {
                       {event.capacity} spots
                     </span>
                   </div>
-                  
+
                   <h3 className="text-[17px] font-semibold mb-1.5 text-neutral-900 tracking-tight group-hover:text-neutral-700 transition-colors">
                     {event.title}
                   </h3>
                   <p className="text-neutral-400 text-[14px] mb-5 line-clamp-2 leading-relaxed flex-1">
                     {event.description}
                   </p>
-                  
+
                   <div className="space-y-2 text-[13px] text-neutral-500 mb-5">
                     <div className="flex items-center gap-2.5">
                       <Clock className="w-3.5 h-3.5 text-neutral-400" />
@@ -258,7 +257,7 @@ export default function DashboardPage() {
                         Reserved
                       </div>
                     ) : (
-                      <Button 
+                      <Button
                         className="w-full group/btn"
                         onClick={() => handleReserve(event.id)}
                       >

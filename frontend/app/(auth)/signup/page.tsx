@@ -9,7 +9,7 @@ import { Input } from "@/app/components/Input";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
-/* ── Floating ring ── */
+
 function Ring({
   size,
   duration,
@@ -74,9 +74,9 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen flex">
-      {/* ── Left Panel — Minimal rings animation ── */}
+
       <div className="hidden lg:flex lg:w-[50%] bg-neutral-900 relative overflow-hidden items-center justify-center">
-        {/* Soft ambient glow */}
+
         <motion.div
           className="absolute w-125 h-125 rounded-full"
           style={{
@@ -90,13 +90,13 @@ export default function SignupPage() {
           transition={{ duration: 10, ease: "easeInOut", repeat: Infinity }}
         />
 
-        {/* Rings (reverse rotation for variety) */}
+
         <Ring size={120} duration={30} delay={0} opacity={0.07} />
         <Ring size={220} duration={40} delay={0.2} opacity={0.05} />
         <Ring size={340} duration={55} delay={0.4} opacity={0.03} />
         <Ring size={460} duration={70} delay={0.6} opacity={0.02} />
 
-        {/* Center dot cluster */}
+
         <motion.div
           className="relative z-10 flex items-center gap-2"
           initial={{ opacity: 0, scale: 0.85 }}
@@ -114,7 +114,7 @@ export default function SignupPage() {
           ))}
         </motion.div>
 
-        {/* Bottom text */}
+
         <motion.div
           className="absolute bottom-12 left-12 right-12"
           initial={{ opacity: 0, y: 12 }}
@@ -130,7 +130,7 @@ export default function SignupPage() {
         </motion.div>
       </div>
 
-      {/* ── Right Panel — Signup Form ── */}
+
       <div className="flex-1 flex items-center justify-center p-6 sm:p-12 bg-[--background]">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -138,7 +138,7 @@ export default function SignupPage() {
           transition={{ duration: 0.55, delay: 0.05, ease: [0.2, 0.6, 0.35, 1] }}
           className="w-full max-w-100"
         >
-          {/* Mobile logo */}
+
           <div className="lg:hidden mb-10 text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-neutral-900 mb-4">
               <span className="text-lg font-bold text-white">E</span>
@@ -187,11 +187,10 @@ export default function SignupPage() {
                     key={opt.value}
                     type="button"
                     onClick={() => setRole(opt.value)}
-                    className={`group flex flex-col items-center gap-2 px-4 py-4 rounded-xl text-[14px] font-medium transition-all duration-200 cursor-pointer ${
-                      role === opt.value
-                        ? "bg-neutral-900 text-white shadow-md"
-                        : "bg-neutral-50 text-neutral-600 border border-neutral-200 hover:border-neutral-300 hover:bg-neutral-100"
-                    }`}
+                    className={`group flex flex-col items-center gap-2 px-4 py-4 rounded-xl text-[14px] font-medium transition-all duration-200 cursor-pointer ${role === opt.value
+                      ? "bg-neutral-900 text-white shadow-md"
+                      : "bg-neutral-50 text-neutral-600 border border-neutral-200 hover:border-neutral-300 hover:bg-neutral-100"
+                      }`}
                   >
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d={opt.icon} />

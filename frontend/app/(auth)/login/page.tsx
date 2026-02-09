@@ -9,7 +9,6 @@ import { Input } from "@/app/components/Input";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
-/* ── Orbital ring component ── */
 function OrbitalRing({
   size,
   duration,
@@ -43,7 +42,6 @@ function OrbitalRing({
         opacity: { duration: 1.2, ease: "easeOut", delay: delay * 0.5 },
       }}
     >
-      {/* Dots on the ring */}
       {Array.from({ length: dotCount }).map((_, i) => {
         const angle = (360 / dotCount) * i;
         return (
@@ -94,9 +92,9 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex">
-      {/* ── Left Panel — Minimal orbital animation ── */}
+
       <div className="hidden lg:flex lg:w-[50%] bg-neutral-900 relative overflow-hidden items-center justify-center">
-        {/* Soft ambient glow */}
+
         <motion.div
           className="absolute w-150 h-150 rounded-full"
           style={{
@@ -110,12 +108,12 @@ export default function LoginPage() {
           transition={{ duration: 8, ease: "easeInOut", repeat: Infinity }}
         />
 
-        {/* Orbital rings */}
+
         <OrbitalRing size={140} duration={25} delay={0} opacity={0.08} dotCount={3} />
         <OrbitalRing size={260} duration={35} delay={0.3} opacity={0.05} dotCount={4} />
         <OrbitalRing size={400} duration={50} delay={0.6} opacity={0.03} dotCount={5} />
 
-        {/* Center icon */}
+
         <motion.div
           className="relative z-10 w-16 h-16 rounded-2xl bg-white/[0.07] backdrop-blur-sm border border-white/8 flex items-center justify-center"
           initial={{ scale: 0.8, opacity: 0 }}
@@ -125,7 +123,7 @@ export default function LoginPage() {
           <span className="text-[22px] font-bold text-white/80">E</span>
         </motion.div>
 
-        {/* Bottom text */}
+
         <motion.div
           className="absolute bottom-12 left-12 right-12"
           initial={{ opacity: 0, y: 12 }}
@@ -141,7 +139,7 @@ export default function LoginPage() {
         </motion.div>
       </div>
 
-      {/* ── Right Panel — Login Form ── */}
+
       <div className="flex-1 flex items-center justify-center p-6 sm:p-12 bg-[--background] relative">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -149,7 +147,7 @@ export default function LoginPage() {
           transition={{ duration: 0.55, delay: 0.05, ease: [0.2, 0.6, 0.35, 1] }}
           className="w-full max-w-100"
         >
-          {/* Mobile logo */}
+
           <div className="lg:hidden mb-10 text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-neutral-900 mb-4">
               <span className="text-lg font-bold text-white">E</span>
