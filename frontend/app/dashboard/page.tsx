@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/auth-context";
 import { api, Event, Reservation } from "@/lib/api";
 import { Button } from "@/app/components/Button";
 import { Card } from "@/app/components/Card";
-import { Calendar, MapPin, Ticket, Clock, CheckCircle, LogOut, ArrowRight } from "lucide-react";
+import { Calendar, MapPin, Ticket, Clock, CheckCircle, LogOut, ArrowRight, Download } from "lucide-react";
 
 export default function DashboardPage() {
   const { user, logout } = useAuth();
@@ -56,6 +56,26 @@ export default function DashboardPage() {
     } catch (err) {
       const error = err as { response?: { data?: { message: string } } };
       alert(error.response?.data?.message || "Failed to cancel");
+    }
+  };
+
+  const handleDownloadTicket = async (reservationId: string, eventTitle: string) => {
+    try {
+      const res = await api.get(`/reservations/${reservationId}/ticket`, {
+        responseType: 'blob',
+      });
+      const blob = new Blob([res.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `ticket-${eventTitle.replace(/\s+/g, '-').toLowerCase()}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      const error = err as { response?: { data?: { message: string } } };
+      alert(error.response?.data?.message || "Failed to download ticket");
     }
   };
 
@@ -185,14 +205,27 @@ export default function DashboardPage() {
                   </div>
 
                   {res.status !== 'CANCELED' && (
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      className="w-full"
-                      onClick={() => handleCancel(res.id)}
-                    >
-                      Cancel reservation
-                    </Button>
+                    <div className="flex gap-2">
+                      {res.status === 'CONFIRMED' && (
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          className="flex-1 bg-emerald-600 hover:bg-emerald-700 border-emerald-600 hover:border-emerald-700"
+                          onClick={() => handleDownloadTicket(res.id, res.event?.title || 'event')}
+                        >
+                          <Download className="w-3.5 h-3.5 mr-1.5" />
+                          Download Ticket
+                        </Button>
+                      )}
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        className={res.status === 'CONFIRMED' ? '' : 'w-full'}
+                        onClick={() => handleCancel(res.id)}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
                   )}
                 </div>
               ))}
