@@ -1,22 +1,26 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
 import {
   Injectable,
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common';
-import { MemoryStoreService } from '../common/memory-store.service';
+import { MongoStoreService } from '../common/mongo-store.service';
 import { ReservationStatus } from '../common/enums';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const PDFDocument = require('pdfkit');
 
 @Injectable()
 export class TicketService {
-  constructor(private store: MemoryStoreService) {}
+  constructor(private store: MongoStoreService) {}
 
   async generateTicketPdf(
     reservationId: string,
     userId: string,
   ): Promise<Buffer> {
-    const reservation = this.store.findReservationById(reservationId);
+    const reservation = await this.store.findReservationById(reservationId);
     if (!reservation) {
       throw new NotFoundException('Reservation not found');
     }
@@ -31,12 +35,12 @@ export class TicketService {
       );
     }
 
-    const event = this.store.findEventById(reservation.eventId);
+    const event = await this.store.findEventById(reservation.eventId);
     if (!event) {
       throw new NotFoundException('Event not found');
     }
 
-    const user = this.store.findUserById(reservation.userId);
+    const user = await this.store.findUserById(reservation.userId);
 
     return new Promise<Buffer>((resolve, reject) => {
       const doc = new PDFDocument({

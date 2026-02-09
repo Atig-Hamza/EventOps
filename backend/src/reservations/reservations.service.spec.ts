@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ReservationsService } from './reservations.service';
-import { MemoryStoreService } from '../common/memory-store.service';
+import { MongoStoreService } from '../common/mongo-store.service';
 import { EventsService } from '../events/events.service';
 import { EventStatus, ReservationStatus } from '../common/enums';
 import { BadRequestException, ConflictException } from '@nestjs/common';
 
 describe('ReservationsService', () => {
   let service: ReservationsService;
-  let store: MemoryStoreService;
+  let store: MongoStoreService;
   let eventsService: EventsService;
 
   beforeEach(async () => {
@@ -15,7 +15,7 @@ describe('ReservationsService', () => {
       providers: [
         ReservationsService,
         {
-          provide: MemoryStoreService,
+          provide: MongoStoreService,
           useValue: {
             findActiveReservation: jest.fn(),
             countReservationsByEvent: jest.fn(),
@@ -39,7 +39,7 @@ describe('ReservationsService', () => {
     }).compile();
 
     service = module.get<ReservationsService>(ReservationsService);
-    store = module.get<MemoryStoreService>(MemoryStoreService);
+    store = module.get<MongoStoreService>(MongoStoreService);
     eventsService = module.get<EventsService>(EventsService);
   });
 
@@ -51,11 +51,11 @@ describe('ReservationsService', () => {
     it('should create reservation', async () => {
       const event = { id: '1', status: EventStatus.Published, capacity: 10 };
       jest.spyOn(eventsService, 'findOne').mockResolvedValue(event as any);
-      jest.spyOn(store, 'findActiveReservation').mockReturnValue(undefined);
-      jest.spyOn(store, 'countReservationsByEvent').mockReturnValue(0);
+      jest.spyOn(store, 'findActiveReservation').mockResolvedValue(undefined);
+      jest.spyOn(store, 'countReservationsByEvent').mockResolvedValue(0);
       jest
         .spyOn(store, 'createReservation')
-        .mockReturnValue({ id: 'res1' } as any);
+        .mockResolvedValue({ id: 'res1' } as any);
 
       const result = await service.create('user1', { eventId: '1' });
       expect(result).toEqual({ id: 'res1' });
@@ -74,7 +74,7 @@ describe('ReservationsService', () => {
       jest
         .spyOn(eventsService, 'findOne')
         .mockResolvedValue({ status: EventStatus.Published } as any);
-      jest.spyOn(store, 'findActiveReservation').mockReturnValue({} as any);
+      jest.spyOn(store, 'findActiveReservation').mockResolvedValue({} as any);
       await expect(service.create('u', { eventId: '1' })).rejects.toThrow(
         ConflictException,
       );
@@ -83,8 +83,8 @@ describe('ReservationsService', () => {
     it('should throw if event is full', async () => {
       const event = { id: '1', status: EventStatus.Published, capacity: 1 };
       jest.spyOn(eventsService, 'findOne').mockResolvedValue(event as any);
-      jest.spyOn(store, 'findActiveReservation').mockReturnValue(undefined);
-      jest.spyOn(store, 'countReservationsByEvent').mockReturnValue(1);
+      jest.spyOn(store, 'findActiveReservation').mockResolvedValue(undefined);
+      jest.spyOn(store, 'countReservationsByEvent').mockResolvedValue(1);
 
       await expect(service.create('u', { eventId: '1' })).rejects.toThrow(
         BadRequestException,
@@ -95,8 +95,8 @@ describe('ReservationsService', () => {
   describe('updateStatus', () => {
     it('should update status', async () => {
       const res = { id: '1', userId: 'u1' };
-      jest.spyOn(store, 'findReservationById').mockReturnValue(res as any);
-      jest.spyOn(store, 'updateReservation').mockReturnValue({
+      jest.spyOn(store, 'findReservationById').mockResolvedValue(res as any);
+      jest.spyOn(store, 'updateReservation').mockResolvedValue({
         ...res,
         status: ReservationStatus.Confirmed,
       } as any);
@@ -110,7 +110,7 @@ describe('ReservationsService', () => {
 
     it('should throw if participant tries to confirm', async () => {
       const res = { id: '1', userId: 'u1' };
-      jest.spyOn(store, 'findReservationById').mockReturnValue(res as any);
+      jest.spyOn(store, 'findReservationById').mockResolvedValue(res as any);
 
       // Passing user ID implies participant action
       await expect(
@@ -120,10 +120,11 @@ describe('ReservationsService', () => {
 
     it('should allow participant to cancel', async () => {
       const res = { id: '1', userId: 'u1' };
-      jest.spyOn(store, 'findReservationById').mockReturnValue(res as any);
-      jest
-        .spyOn(store, 'updateReservation')
-        .mockReturnValue({ ...res, status: ReservationStatus.Canceled } as any);
+      jest.spyOn(store, 'findReservationById').mockResolvedValue(res as any);
+      jest.spyOn(store, 'updateReservation').mockResolvedValue({
+        ...res,
+        status: ReservationStatus.Canceled,
+      } as any);
 
       const result = await service.updateStatus(
         '1',

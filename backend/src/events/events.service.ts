@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { MemoryStoreService } from '../common/memory-store.service';
+import { MongoStoreService } from '../common/mongo-store.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { EventStatus, ReservationStatus } from '../common/enums';
@@ -7,9 +7,8 @@ import { Event } from '../common/models';
 
 @Injectable()
 export class EventsService {
-  constructor(private store: MemoryStoreService) {}
+  constructor(private store: MongoStoreService) {}
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async create(createEventDto: CreateEventDto): Promise<Event> {
     return this.store.createEvent({
       ...createEventDto,
@@ -17,52 +16,46 @@ export class EventsService {
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async findAllPublic(): Promise<Event[]> {
-    return this.store
-      .listEvents()
+    const events = await this.store.listEvents();
+    return events
       .filter((event) => event.status === EventStatus.Published)
       .sort((a, b) => a.dateTime.getTime() - b.dateTime.getTime());
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async findAllAdmin() {
-    const events = this.store
-      .listEvents()
-      .sort((a, b) => a.dateTime.getTime() - b.dateTime.getTime());
+    const events = await this.store.listEvents();
+    events.sort((a, b) => a.dateTime.getTime() - b.dateTime.getTime());
 
-    return events.map((event) => ({
-      ...event,
-      reservedCount: this.store.countReservationsByEvent(event.id, [
-        ReservationStatus.Confirmed,
-        ReservationStatus.Pending,
-      ]),
-    }));
+    const result: (Event & { reservedCount: number })[] = [];
+    for (const event of events) {
+      const reservedCount = await this.store.countReservationsByEvent(
+        event.id,
+        [ReservationStatus.Confirmed, ReservationStatus.Pending],
+      );
+      result.push({ ...event, reservedCount });
+    }
+    return result;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async findOne(id: string): Promise<Event> {
-    const event = this.store.findEventById(id);
+    const event = await this.store.findEventById(id);
     if (!event) throw new NotFoundException('Event not found');
     return event;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async update(id: string, updateEventDto: UpdateEventDto) {
-    const data: any = { ...updateEventDto };
+    const data: Record<string, any> = { ...updateEventDto };
     if (updateEventDto.dateTime) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       data.dateTime = new Date(updateEventDto.dateTime);
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const updated = this.store.updateEvent(id, data);
+    const updated = await this.store.updateEvent(id, data);
     if (!updated) throw new NotFoundException('Event not found');
     return updated;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async remove(id: string) {
-    const deleted = this.store.deleteEvent(id);
+    const deleted = await this.store.deleteEvent(id);
     if (!deleted) throw new NotFoundException('Event not found');
     return deleted;
   }

@@ -4,17 +4,18 @@ import {
   NotFoundException,
   ConflictException,
 } from '@nestjs/common';
-import { MemoryStoreService } from '../common/memory-store.service';
+import { MongoStoreService } from '../common/mongo-store.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { EventsService } from '../events/events.service';
 import { EventStatus, ReservationStatus } from '../common/enums';
+import { Event, Reservation, User } from '../common/models';
 
 @Injectable()
 export class ReservationsService {
   constructor(
-    private store: MemoryStoreService,
+    private store: MongoStoreService,
     private eventsService: EventsService,
-  ) { }
+  ) {}
 
   async create(userId: string, createReservationDto: CreateReservationDto) {
     const { eventId } = createReservationDto;
@@ -26,7 +27,7 @@ export class ReservationsService {
       );
     }
 
-    const existingReservation = this.store.findActiveReservation(
+    const existingReservation = await this.store.findActiveReservation(
       userId,
       eventId,
     );
@@ -37,7 +38,7 @@ export class ReservationsService {
       );
     }
 
-    const confirmedOrPendingCount = this.store.countReservationsByEvent(
+    const confirmedOrPendingCount = await this.store.countReservationsByEvent(
       eventId,
       [ReservationStatus.Confirmed, ReservationStatus.Pending],
     );
@@ -53,43 +54,39 @@ export class ReservationsService {
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async findAllByUser(userId: string) {
-    return this.store
-      .listReservationsByUser(userId)
-      .map((reservation) => ({
-        ...reservation,
-        event: this.store.findEventById(reservation.eventId),
-      }))
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    const reservations = await this.store.listReservationsByUser(userId);
+    const result: (Reservation & { event?: Event })[] = [];
+    for (const reservation of reservations) {
+      const event = await this.store.findEventById(reservation.eventId);
+      result.push({ ...reservation, event });
+    }
+    return result.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async findAllByEvent(eventId: string) {
-    return this.store
-      .listReservationsByEvent(eventId)
-      .map((reservation) => ({
-        ...reservation,
-        user: this.store.findUserById(reservation.userId),
-      }))
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    const reservations = await this.store.listReservationsByEvent(eventId);
+    const result: (Reservation & { user?: User })[] = [];
+    for (const reservation of reservations) {
+      const user = await this.store.findUserById(reservation.userId);
+      result.push({ ...reservation, user });
+    }
+    return result.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async findAllAdmin() {
-    return this.store
-      .listReservations()
-      .map((reservation) => ({
-        ...reservation,
-        event: this.store.findEventById(reservation.eventId),
-        user: this.store.findUserById(reservation.userId),
-      }))
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    const reservations = await this.store.listReservations();
+    const result: (Reservation & { event?: Event; user?: User })[] = [];
+    for (const reservation of reservations) {
+      const event = await this.store.findEventById(reservation.eventId);
+      const user = await this.store.findUserById(reservation.userId);
+      result.push({ ...reservation, event, user });
+    }
+    return result.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async updateStatus(id: string, status: ReservationStatus, userId?: string) {
-    const reservation = this.store.findReservationById(id);
+    const reservation = await this.store.findReservationById(id);
 
     if (!reservation) {
       throw new NotFoundException('Reservation not found');
@@ -106,7 +103,7 @@ export class ReservationsService {
       }
     }
 
-    const updated = this.store.updateReservation(id, { status });
+    const updated = await this.store.updateReservation(id, { status });
     if (!updated) throw new NotFoundException('Reservation not found');
     return updated;
   }

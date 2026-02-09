@@ -1,19 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EventsService } from './events.service';
-import { MemoryStoreService } from '../common/memory-store.service';
+import { MongoStoreService } from '../common/mongo-store.service';
 import { EventStatus } from '../common/enums';
 import { NotFoundException } from '@nestjs/common';
 
 describe('EventsService', () => {
   let service: EventsService;
-  let store: MemoryStoreService;
+  let store: MongoStoreService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         EventsService,
         {
-          provide: MemoryStoreService,
+          provide: MongoStoreService,
           useValue: {
             createEvent: jest.fn(),
             listEvents: jest.fn(),
@@ -27,7 +27,7 @@ describe('EventsService', () => {
     }).compile();
 
     service = module.get<EventsService>(EventsService);
-    store = module.get<MemoryStoreService>(MemoryStoreService);
+    store = module.get<MongoStoreService>(MongoStoreService);
   });
 
   it('should be defined', () => {
@@ -49,7 +49,7 @@ describe('EventsService', () => {
         dateTime: new Date(dto.dateTime),
         status: EventStatus.Draft,
       };
-      jest.spyOn(store, 'createEvent').mockReturnValue(expected);
+      jest.spyOn(store, 'createEvent').mockResolvedValue(expected);
 
       const result = await service.create(dto);
       expect(result).toEqual(expected);
@@ -69,7 +69,7 @@ describe('EventsService', () => {
         { id: '2', title: 'E2', dateTime: now, status: EventStatus.Published },
         { id: '3', title: 'E3', dateTime: now, status: EventStatus.Draft },
       ];
-      jest.spyOn(store, 'listEvents').mockReturnValue(events as any);
+      jest.spyOn(store, 'listEvents').mockResolvedValue(events as any);
 
       const result = await service.findAllPublic();
       expect(result).toHaveLength(2);
@@ -81,8 +81,8 @@ describe('EventsService', () => {
   describe('findAllAdmin', () => {
     it('should return all events with reservation count', async () => {
       const events = [{ id: '1', dateTime: new Date() }];
-      jest.spyOn(store, 'listEvents').mockReturnValue(events as any);
-      jest.spyOn(store, 'countReservationsByEvent').mockReturnValue(5);
+      jest.spyOn(store, 'listEvents').mockResolvedValue(events as any);
+      jest.spyOn(store, 'countReservationsByEvent').mockResolvedValue(5);
 
       const result = await service.findAllAdmin();
       expect(result[0]).toHaveProperty('reservedCount', 5);
@@ -92,12 +92,12 @@ describe('EventsService', () => {
   describe('findOne', () => {
     it('should return event', async () => {
       const event = { id: '1' };
-      jest.spyOn(store, 'findEventById').mockReturnValue(event as any);
+      jest.spyOn(store, 'findEventById').mockResolvedValue(event as any);
       expect(await service.findOne('1')).toEqual(event);
     });
 
     it('should throw NotFoundException', async () => {
-      jest.spyOn(store, 'findEventById').mockReturnValue(undefined);
+      jest.spyOn(store, 'findEventById').mockResolvedValue(undefined);
       await expect(service.findOne('1')).rejects.toThrow(NotFoundException);
     });
   });
@@ -105,13 +105,13 @@ describe('EventsService', () => {
   describe('update', () => {
     it('should update event', async () => {
       const event = { id: '1', title: 'New' };
-      jest.spyOn(store, 'updateEvent').mockReturnValue(event as any);
+      jest.spyOn(store, 'updateEvent').mockResolvedValue(event as any);
       const result = await service.update('1', { title: 'New' });
       expect(result).toEqual(event);
     });
 
     it('should throw NotFoundException on update', async () => {
-      jest.spyOn(store, 'updateEvent').mockReturnValue(undefined);
+      jest.spyOn(store, 'updateEvent').mockResolvedValue(undefined);
       await expect(service.update('1', {})).rejects.toThrow(NotFoundException);
     });
   });
